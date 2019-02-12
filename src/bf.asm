@@ -8,6 +8,7 @@
 .segment "ZEROPAGE"
     BF_ptr: .res 2
     BF_line: .res 1
+    BF_char: .res 1
 
 .segment "CODE"
 .proc BF_incp
@@ -41,18 +42,38 @@
     rts
 .endproc
 .proc BF_print
+    jsr ppu_WaitForNmiDone
     ldy #0
     lda (BF_ptr),y
     cmp #$0A
-    bne :+
+    bne @else
+        @newLine:
         lda BF_line
         add #1
+        cmp #28
+        bne :+
+            jsr ppu_Off
+            call ppu_FillNameTable, #>PPU_ADDR_NAMETABLE1, #$20, #0
+            jsr ppu_On
+            lda #3
+        :
         sta BF_line
+        lda #0
+        sta BF_char
         call ppu_SetAddr, #>PPU_ADDR_NAMETABLE1, #1, BF_line
-        jmp :++
-    :
-        sta PPU_DATA
-    :
+        jmp @endif
+    @else:
+        m_ppu_ResumeWrite
+        m_ppu_Write
+        lda BF_char
+        add #1
+        sta BF_char
+        cmp #28
+        bne :+
+            jmp @newLine
+        :
+    @endif:
+    jsr ppu_ResetScroll
     rts
 .endproc
 .proc BF_read

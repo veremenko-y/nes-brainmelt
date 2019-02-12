@@ -1,7 +1,7 @@
 .ifndef BF_INC
 .define BF_INC
 
-.globalzp BF_ptr, BF_line
+.globalzp BF_ptr, BF_line, BF_char
 .global BF_ram
 .global BF_incp
 .global BF_decp
@@ -10,20 +10,24 @@
 .global BF_print
 .global BF_read
 
-BF_MAX_SOURCE_LENGTH = 1024
+BF_MAX_SOURCE_LENGTH = 3000
 
 bflabel .set 0
 bfstack .set 0
 .macro BF_compile src
+    jsr ppu_Off
     lda #<BF_ram
     sta BF_ptr+0
     lda #>BF_ram
     sta BF_ptr+1
     lda #3
     sta BF_line
+    lda #0
+    sta BF_char
     m_ppu_BeginWrite
     call ppu_FillNameTable, #>PPU_ADDR_NAMETABLE1, #$20, #0
     call ppu_SetAddr, #>PPU_ADDR_NAMETABLE1, #1, BF_line
+    jsr ppu_On
     .if .strlen(src) > BF_MAX_SOURCE_LENGTH
         .error .sprintf("Brainfuck source is too long. Max ", BF_MAX_SOURCE_LENGTH)
     .endif

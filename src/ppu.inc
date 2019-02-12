@@ -62,6 +62,16 @@ OAM_XPOS = 3
     lda PPU_STATUS
 .endmacro
 
+.macro m_ppu_ResumeWrite
+    pha
+    m_ppu_BeginWrite
+    lda ppu_addr+0
+    sta PPU_ADDR
+    lda ppu_addr+1
+    sta PPU_ADDR
+    pla
+.endmacro
+
 .macro m_ppu_Write
     sta PPU_DATA
     pha

@@ -36,6 +36,8 @@
 .segment "CODE"
 
 .proc ppu_WaitForNmiDone
+    lda #0           ; reset nmi flag
+    sta ppu_nmi_done
 @forever:
     lda ppu_nmi_done ; Execute main loop once per frame
     beq @forever
@@ -118,6 +120,7 @@
     jsr ppu_WaitForNmiDone
     mova PPU_CTRL, ppu_ctrl
     mova PPU_MASK, ppu_mask
+    jsr ppu_ResetScroll
     rts
 .endproc
 
@@ -127,7 +130,6 @@
 ;   OUT: none
 ;   USE: A
 .proc ppu_Off
-    mova ppu_nmi_done, #0
     jsr ppu_WaitForNmiDone
     lda #0
     sta ppu_needOam
@@ -307,6 +309,7 @@ __ppu_sprites_loop:
     bcc :+
         pha
         lda #(1 << 0) ; put bit 0 if carry
+        ora yShiftHi,x
         sta yShiftHi,x
         pla
     :
