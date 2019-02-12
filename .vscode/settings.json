@@ -1,0 +1,15 @@
+{
+    "editor.detectIndentation": false,
+    "editor.tabSize": 4,
+    "AllAutocomplete.languageSpecialCharacters": {
+        "inc": "^[\\.#]",
+        "asm": "^[\\.#]"
+    },
+    "AllAutocomplete.languageWhitespace": {
+        "ca65": "[^\\w_\\u0080-\\uFFFF]+"
+    },
+    "AllAutocomplete.wordListFiles": [
+        "nes.inc"
+    ],
+    "editor.acceptSuggestionOnEnter": "smart"
+}

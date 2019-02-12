@@ -1,0 +1,10 @@
+
+[{
+    "key": "ctrl+r",
+    "command": "workbench.action.tasks.runTask",
+    "when": "run build"
+},{
+    "key": "ctrl+b",
+    "command": "workbench.action.tasks.runTask",
+    "when": "run debug"
+}]
