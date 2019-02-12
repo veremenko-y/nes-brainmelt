@@ -15,6 +15,7 @@ BF_MAX_SOURCE_LENGTH = 3000
 bflabel .set 0
 bfstack .set 0
 .macro BF_compile src
+    bfbegin = *
     jsr ppu_Off
     lda #<BF_ram
     sta BF_ptr+0
@@ -71,6 +72,7 @@ bfstack .set 0
         .endif
     .endrep
     rts
+    .out .sprintf("Brainfuck sucessfuly compiled. Size: %d bytes", * - bfbegin)
 .endmacro
 
 .endif
