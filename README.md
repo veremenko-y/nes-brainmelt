@@ -4,6 +4,8 @@
 
 Brainfuck VM/"compiler" for NES. Uses ca65 macroses to generate binary for supplied Brainfuck code. Read operator is not supported.
 
+Download NES file [here](game.nes).
+
 ## Examples
 
 ```
