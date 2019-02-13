@@ -26,6 +26,7 @@ BF_compile "++++[>+++++<-]>+++[[>+>+<<-]>++++++[<+>-]+++++++++[<++++++++++>-]>[<
     sta ppu_ctrl
     lda #(PPU_MASK_SPR_ON | PPU_MASK_SPR_LEFT_ON | PPU_MASK_BG_ON | PPU_MASK_BG_LEFT_ON)
     sta ppu_mask
+    call ppu_FillNameTable, #>PPU_ADDR_NAMETABLE3, #$20, #0
 state_Title:
     jsr ppu_Off
     lda ppu_ctrl

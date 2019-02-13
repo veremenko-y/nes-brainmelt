@@ -1,6 +1,8 @@
 # NES Brainfuck
 
-Brainfuck VM for NES. Uses ca65 macroses to generate binary for supplied Brainfuck code. Read operator is not supported.
+![Brainfuck](/info/title.png)
+
+Brainfuck VM/"compiler" for NES. Uses ca65 macroses to generate binary for supplied Brainfuck code. Read operator is not supported.
 
 ## Examples
 
