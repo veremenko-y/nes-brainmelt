@@ -11,10 +11,12 @@
 .global BF_read
 
 BF_MAX_SOURCE_LENGTH = 3000
+BF_RAM_SIZE = $FF
 
 bflabel .set 0
 bfstack .set 0
 .macro BF_compile src
+    .local bfbegin
     bfbegin = *
     jsr ppu_Off
     lda #<BF_ram
@@ -25,6 +27,13 @@ bfstack .set 0
     sta BF_line
     lda #0
     sta BF_char
+    ; clear ram
+    ldx #0
+    lda #0
+    :
+        sta BF_ram,x
+        inx
+        bne :-
     m_ppu_BeginWrite
     call ppu_FillNameTable, #>PPU_ADDR_NAMETABLE1, #$20, #0
     call ppu_SetAddr, #>PPU_ADDR_NAMETABLE1, #1, BF_line

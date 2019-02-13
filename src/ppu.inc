@@ -30,7 +30,7 @@
     decl "stack", ppu_FillNameTable
     decl "stack", ppu_LoadNameTable
     decl "stack", ppu_LoadAttributes
-    ;decl "stack", ppu_LoadNameTableRle
+    decl "stack", ppu_LoadNameTableRle
     decl "reg", ppu_SetAddr
     decl "reg", ppu_LoadPallete
     .global ppu_BeginSprites

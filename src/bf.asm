@@ -4,7 +4,7 @@
 .include "bf.inc"
 
 .segment "BSS"
-    BF_ram: .res 1024
+    BF_ram: .res BF_RAM_SIZE
 .segment "ZEROPAGE"
     BF_ptr: .res 2
     BF_line: .res 1
@@ -42,6 +42,8 @@
     rts
 .endproc
 .proc BF_print
+    lda #0
+    sta ppu_nmi_done
     jsr ppu_WaitForNmiDone
     ldy #0
     lda (BF_ptr),y

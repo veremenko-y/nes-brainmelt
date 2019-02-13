@@ -36,8 +36,6 @@
 .segment "CODE"
 
 .proc ppu_WaitForNmiDone
-    lda #0           ; reset nmi flag
-    sta ppu_nmi_done
 @forever:
     lda ppu_nmi_done ; Execute main loop once per frame
     beq @forever
@@ -117,6 +115,8 @@
 ;   OUT: none
 ;   USE: A
 .proc ppu_On
+    lda #0           ; reset nmi flag
+    sta ppu_nmi_done
     jsr ppu_WaitForNmiDone
     mova PPU_CTRL, ppu_ctrl
     mova PPU_MASK, ppu_mask
@@ -130,6 +130,8 @@
 ;   OUT: none
 ;   USE: A
 .proc ppu_Off
+    lda #0           ; reset nmi flag
+    sta ppu_nmi_done
     jsr ppu_WaitForNmiDone
     lda #0
     sta ppu_needOam
@@ -442,50 +444,50 @@ __ppu_sprites_loop:
 ; PARAMS:
 ;   Stack+0 - Data hi address
 ;   Stack+1 - Data lo address
-; .proc ppu_LoadNameTableRle
-;     ; Declaring subroutines parameters
-;     stackparam addrLo
-;     stackparam addrHi
-;     rleTag = _ppu_tmp1
-;     rleByte = _ppu_tmp2
-;     tsx
-;     lda addrLo,x
-;     sta ppu_addr+0
-;     lda addrHi,x
-;     sta ppu_addr+1
+.proc ppu_LoadNameTableRle
+    ; Declaring subroutines parameters
+    stackparam addrLo
+    stackparam addrHi
+    rleTag = _ppu_tmp1
+    rleByte = _ppu_tmp2
+    tsx
+    lda addrLo,x
+    sta ppu_addr+0
+    lda addrHi,x
+    sta ppu_addr+1
 
-; 	ldy #0
-; 	jsr @readByte
-; 	sta rleTag
-; @checkTag:
-; 	jsr @readByte
-; 	cmp rleTag
-; 	beq @checkEnd
-; 	sta PPU_DATA
-; 	sta rleByte
-; 	bne @checkTag
-; @checkEnd:
-; 	jsr @readByte
-; 	cmp #0
-; 	beq @end
-; 	tax
-; 	lda rleByte
-; @writeRun:
-; 	sta PPU_DATA
-; 	dex
-; 	bne @writeRun
-; 	beq @checkTag
-; @end:
-; 	rts
+	ldy #0
+	jsr @readByte
+	sta rleTag
+@checkTag:
+	jsr @readByte
+	cmp rleTag
+	beq @checkEnd
+	sta PPU_DATA
+	sta rleByte
+	bne @checkTag
+@checkEnd:
+	jsr @readByte
+	cmp #0
+	beq @end
+	tax
+	lda rleByte
+@writeRun:
+	sta PPU_DATA
+	dex
+	bne @writeRun
+	beq @checkTag
+@end:
+	rts
 
-; @readByte:
-; 	lda (ppu_addr),y
-; 	inc ppu_addr+0
-; 	bne :+
-; 	inc ppu_addr+1
-; :
-; 	rts
-; .endproc
+@readByte:
+	lda (ppu_addr),y
+	inc ppu_addr+0
+	bne :+
+	inc ppu_addr+1
+:
+	rts
+.endproc
 
 ; .macro m_ppu_SetXy nameTable, xCoord, yCoord
 ;     ;POSITION =
