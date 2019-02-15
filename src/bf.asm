@@ -18,12 +18,102 @@
     :
     rts
 .endproc
+.proc BF_incp2
+    jsr BF_incp
+    jmp BF_incp
+.endproc
+.proc BF_incp5
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jmp BF_incp
+.endproc
+.proc BF_incp10
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jmp BF_incp
+.endproc
+.proc BF_incp20
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jsr BF_incp
+    jmp BF_incp
+.endproc
 .proc BF_decp
     dec BF_ptr+0
     bne :+
         dec BF_ptr+1
     :
     rts
+.endproc
+.proc BF_decp2
+    jsr BF_decp
+    jmp BF_decp
+.endproc
+.proc BF_decp5
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jmp BF_decp
+.endproc
+.proc BF_decp10
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jmp BF_decp
+.endproc
+.proc BF_decp20
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jsr BF_decp
+    jmp BF_decp
 .endproc
 .proc BF_inc
     ldy #0
@@ -33,6 +123,51 @@
     sta (BF_ptr),y
     rts
 .endproc
+.proc BF_inc2
+    jsr BF_inc
+    jmp BF_inc
+.endproc
+.proc BF_inc5
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jmp BF_inc
+.endproc
+.proc BF_inc10
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jmp BF_inc
+.endproc
+.proc BF_inc20
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jsr BF_inc
+    jmp BF_inc
+.endproc
 .proc BF_dec
     ldy #0
     lda (BF_ptr),y
@@ -40,6 +175,51 @@
     sbc #1
     sta (BF_ptr),y
     rts
+.endproc
+.proc BF_dec2
+    jsr BF_dec
+    jmp BF_dec
+.endproc
+.proc BF_dec5
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jmp BF_dec
+.endproc
+.proc BF_dec10
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jmp BF_dec
+.endproc
+.proc BF_dec20
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jsr BF_dec
+    jmp BF_dec
 .endproc
 .proc BF_print
     jsr ppu_WaitForNmiDone
