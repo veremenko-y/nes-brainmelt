@@ -105,17 +105,13 @@ state_Title:
     lda menuItem
     asl
     tax
-    movwa p, {Bf_Jumptable,x}
-    jsr BF_exec
+    movwa BF_codePtr, {Bf_Jumptable,x}
+    jsr BF_run
     @loop_Bf:
         jsr controls_ReadPad1
         lda controls_pad1_pressed
         beq @loop_Bf
         jmp state_Title
-.endproc
-
-.proc BF_exec
-    jmp (p)
 .endproc
 
 .proc writeString
