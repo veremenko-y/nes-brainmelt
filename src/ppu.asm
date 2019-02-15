@@ -212,6 +212,7 @@ __ppu_sprites_loop:
 ;   None
 .export ppu_ResetScroll
 .proc ppu_ResetScroll
+    mova PPU_CTRL, ppu_ctrl
     mova PPU_SCROLL, ppu_scrollx
     mova PPU_SCROLL, ppu_scrolly
     rts

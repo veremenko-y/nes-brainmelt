@@ -72,6 +72,7 @@
         sta BF_char
         cmp #28
         bne :+
+            jsr ppu_ResetScroll
             jmp @newLine
         :
     @endif:

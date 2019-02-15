@@ -81,8 +81,7 @@ nmi:
         jsr ppu_OutputBuffer
     @bufferEnd:
     ; Fix scroll
-    mova PPU_SCROLL, ppu_scrollx
-    mova PPU_SCROLL, ppu_scrolly
+    jsr ppu_ResetScroll
 
     @end:
     m_ppu_SetNmiDone
