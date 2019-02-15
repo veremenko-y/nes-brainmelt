@@ -42,8 +42,6 @@
     rts
 .endproc
 .proc BF_print
-    lda #0
-    sta ppu_nmi_done
     jsr ppu_WaitForNmiDone
     ldy #0
     lda (BF_ptr),y

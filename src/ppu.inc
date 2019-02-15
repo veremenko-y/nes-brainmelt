@@ -4,8 +4,8 @@
 .include "lib_macroses.inc"
 
 .segment "ZEROPAGE"
-    ; set to 1 when NMI has been finalized
-    .globalzp ppu_nmi_done
+    ; increases by one on every nmi
+    .globalzp ppu_frameConter
     ; ID of the last sprite added to oam
     .globalzp ppu_spriteId
     .globalzp ppu_addr
@@ -53,10 +53,6 @@ OAM_YPOS = 0
 OAM_TILE = 1
 OAM_ATTR = 2
 OAM_XPOS = 3
-
-.macro m_ppu_SetNmiDone
-    mova ppu_nmi_done, #1 ; Execute main loop once per frame
-.endmacro
 
 .macro m_ppu_BeginWrite
     lda PPU_STATUS

@@ -4,7 +4,7 @@
 
 .segment "ZEROPAGE"
     ; Public
-    ppu_nmi_done: .res 1 ; set 1 by NMI and reset by m_ppu_WaitForVblank
+    ppu_frameConter: .res 1 ; increases by one on every nmi
     ppu_spriteId: .res 1
     ppu_addr: .res 2
     ppu_hasBuffer: .res 1 ; set to 1 whenever buffered data for nametable is present
@@ -36,11 +36,10 @@
 .segment "CODE"
 
 .proc ppu_WaitForNmiDone
+    lda ppu_frameConter
 @forever:
-    lda ppu_nmi_done ; Execute main loop once per frame
+    cmp ppu_frameConter
     beq @forever
-    lda #0
-    sta ppu_nmi_done ; Reset the flag
     rts
 .endproc
 
@@ -115,8 +114,6 @@
 ;   OUT: none
 ;   USE: A
 .proc ppu_On
-    lda #0           ; reset nmi flag
-    sta ppu_nmi_done
     jsr ppu_WaitForNmiDone
     mova PPU_CTRL, ppu_ctrl
     mova PPU_MASK, ppu_mask
@@ -130,8 +127,6 @@
 ;   OUT: none
 ;   USE: A
 .proc ppu_Off
-    lda #0           ; reset nmi flag
-    sta ppu_nmi_done
     jsr ppu_WaitForNmiDone
     lda #0
     sta ppu_needOam

@@ -84,7 +84,7 @@ nmi:
     jsr ppu_ResetScroll
 
     @end:
-    m_ppu_SetNmiDone
+    inc ppu_frameConter
     popseg
     rti
 
