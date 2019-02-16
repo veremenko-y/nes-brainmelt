@@ -246,9 +246,10 @@ LIB_MACROSES_INC .set 1
 .endmacro
 
 .macro  bgt     Arg     ; branch on greater-than
-    beq     :+
+    .local @end
+    beq     @end
     bcs     Arg
-:
+@end:
 .endmacro
 
 .macro  jgt     Arg     ; branch on greater-than

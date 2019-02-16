@@ -11,7 +11,11 @@
     BF_ptr: .res 2
     BF_readCallback: .res 2
     BF_line: .res 1
+    BF_endLine: .res 1
     BF_char: .res 1
+
+    BF_SCREEN_WIDTH = 30
+    BF_NEW_LINE = $0A
 .segment "RODATA"
 BF_jumptable:
     .word BF_incp-1
@@ -39,6 +43,11 @@ BF_jumptable:
     sta BF_line
     lda #0
     sta BF_char
+    lda #28
+    sta BF_endLine ; current scroll position
+    lda #0
+    sta ppu_scrolly
+
     ; clear ram
     RamEnd = BF_ram + BF_RAM_SIZE
     movwa p, #BF_ram
@@ -201,22 +210,85 @@ BF_jumptable:
     jsr ppu_WaitForNmiDone
     ldy #0
     lda (BF_ptr),y
-    cmp #$0A
-    bne @else
+    cmp #BF_NEW_LINE
+    jne @else
         @newLine:
+        inc BF_line
         lda BF_line
-        add #1
-        cmp #28
+        cmp #60         ; wrap around BF_line at 30*2 (two screens heights)
         bne :+
-            jsr ppu_Off
-            call ppu_FillNameTable, #>PPU_ADDR_NAMETABLE1, #$20, #0
-            jsr ppu_On
-            lda #3
+            lda #0
+            sta BF_line
         :
-        sta BF_line
+        lda BF_line
+        cmp BF_endLine
+        bne @noLineClear
+            inc BF_endLine
+            lda BF_endLine
+            cmp #60
+            bne :+
+                lda #0
+                sta BF_endLine
+            :
+
+            jsr ppu_Off
+            lda BF_line
+            cmp #30
+            bge :+
+                call ppu_SetAddr, #>PPU_ADDR_NAMETABLE1, #1, BF_line
+                jmp :++
+            :
+
+                lda BF_line
+                sub #30
+                sta BF_tmp
+                call ppu_SetAddr, #>PPU_ADDR_NAMETABLE3, #1, BF_tmp
+            :
+            lda ppu_scrolly
+            add #8
+            cmp #240
+            bne :+++
+                lda BF_line
+                cmp #30
+                bge :+
+                    lda #~$03
+                    and ppu_ctrl
+                    sta ppu_ctrl
+                    jmp :++
+                :
+                    lda #$02
+                    ora ppu_ctrl
+                    sta ppu_ctrl
+                :
+            :
+            sta ppu_scrolly
+
+            lda #' '
+            ldx #32
+            :
+                m_ppu_Write
+                dex
+                bne :-
+            jsr ppu_ResetScroll
+            ; call ppu_SetAddr, #>PPU_ADDR_NAMETABLE1, #1, BF_line
+            ; call ppu_FillNameTable, #>PPU_ADDR_NAMETABLE1, #$20, #0
+            jsr ppu_On
+            ;lda #3
+        @noLineClear:
         lda #0
         sta BF_char
-        call ppu_SetAddr, #>PPU_ADDR_NAMETABLE1, #1, BF_line
+
+        lda BF_line
+        cmp #30
+        bge :+
+            call ppu_SetAddr, #>PPU_ADDR_NAMETABLE1, #1, BF_line
+            jmp :++
+        :
+            lda BF_line
+            sub #30
+            sta BF_tmp
+            call ppu_SetAddr, #>PPU_ADDR_NAMETABLE3, #1, BF_tmp
+        :
         jmp @endif
     @else:
         m_ppu_ResumeWrite
@@ -224,7 +296,7 @@ BF_jumptable:
         lda BF_char
         add #1
         sta BF_char
-        cmp #28
+        cmp #BF_SCREEN_WIDTH
         bne :+
             jsr ppu_ResetScroll
             jmp @newLine
