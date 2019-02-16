@@ -128,7 +128,10 @@ BF_jumptable:
     jsr BF_next
     sta BF_tmp
     @loop:
-        jsr BF_incp
+        inc BF_ptr+0
+        bne :+
+            inc BF_ptr+1
+        :
         dec BF_tmp
         bne @loop
     rts
@@ -144,7 +147,10 @@ BF_jumptable:
     jsr BF_next
     sta BF_tmp
     @loop:
-        jsr BF_decp
+        dec BF_ptr+0
+        bne :+
+            dec BF_ptr+1
+        :
         dec BF_tmp
         bne @loop
     rts
@@ -160,8 +166,12 @@ BF_jumptable:
 .proc BF_inc_multi
     jsr BF_next
     sta BF_tmp
+    ldy #0
     @loop:
-        jsr BF_inc
+        lda (BF_ptr),y
+        clc
+        adc #1
+        sta (BF_ptr),y
         dec BF_tmp
         bne @loop
     rts
@@ -177,8 +187,12 @@ BF_jumptable:
 .proc BF_dec_multi
     jsr BF_next
     sta BF_tmp
+    ldy #0
     @loop:
-        jsr BF_dec
+        lda (BF_ptr),y
+        sec
+        sbc #1
+        sta (BF_ptr),y
         dec BF_tmp
         bne @loop
     rts

@@ -6,3 +6,5 @@ src/dialogues/*_msg.inc
 src/levels/*_data.inc
 src/levels/levels_*.inc
 src/levels/*.nam
+/src/*.s
+/tools/*.exe
