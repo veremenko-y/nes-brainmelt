@@ -7,31 +7,21 @@
     BF_ram: .res BF_RAM_SIZE
 .segment "ZEROPAGE"
     BF_codePtr: .res 2
+    BF_tmp: .res 1
     BF_ptr: .res 2
+    BF_readCallback: .res 2
     BF_line: .res 1
     BF_char: .res 1
 .segment "RODATA"
 BF_jumptable:
     .word BF_incp-1
-    .word BF_incp2-1
-    .word BF_incp5-1
-    .word BF_incp10-1
-    .word BF_incp20-1
+    .word BF_incp_multi-1
     .word BF_decp-1
-    .word BF_decp2-1
-    .word BF_decp5-1
-    .word BF_decp10-1
-    .word BF_decp20-1
+    .word BF_decp_multi-1
     .word BF_inc-1
-    .word BF_inc2-1
-    .word BF_inc5-1
-    .word BF_inc10-1
-    .word BF_inc20-1
+    .word BF_inc_multi-1
     .word BF_dec-1
-    .word BF_dec2-1
-    .word BF_dec5-1
-    .word BF_dec10-1
-    .word BF_dec20-1
+    .word BF_dec_multi-1
     .word BF_print-1
     .word BF_read-1
     .word BF_condition-1
@@ -134,50 +124,14 @@ BF_jumptable:
     :
     rts
 .endproc
-.proc BF_incp2
-    jsr BF_incp
-    jmp BF_incp
-.endproc
-.proc BF_incp5
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jmp BF_incp
-.endproc
-.proc BF_incp10
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jmp BF_incp
-.endproc
-.proc BF_incp20
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jsr BF_incp
-    jmp BF_incp
+.proc BF_incp_multi
+    jsr BF_next
+    sta BF_tmp
+    @loop:
+        jsr BF_incp
+        dec BF_tmp
+        bne @loop
+    rts
 .endproc
 .proc BF_decp
     dec BF_ptr+0
@@ -186,50 +140,14 @@ BF_jumptable:
     :
     rts
 .endproc
-.proc BF_decp2
-    jsr BF_decp
-    jmp BF_decp
-.endproc
-.proc BF_decp5
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jmp BF_decp
-.endproc
-.proc BF_decp10
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jmp BF_decp
-.endproc
-.proc BF_decp20
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jsr BF_decp
-    jmp BF_decp
+.proc BF_decp_multi
+    jsr BF_next
+    sta BF_tmp
+    @loop:
+        jsr BF_decp
+        dec BF_tmp
+        bne @loop
+    rts
 .endproc
 .proc BF_inc
     ldy #0
@@ -239,50 +157,14 @@ BF_jumptable:
     sta (BF_ptr),y
     rts
 .endproc
-.proc BF_inc2
-    jsr BF_inc
-    jmp BF_inc
-.endproc
-.proc BF_inc5
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jmp BF_inc
-.endproc
-.proc BF_inc10
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jmp BF_inc
-.endproc
-.proc BF_inc20
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jsr BF_inc
-    jmp BF_inc
+.proc BF_inc_multi
+    jsr BF_next
+    sta BF_tmp
+    @loop:
+        jsr BF_inc
+        dec BF_tmp
+        bne @loop
+    rts
 .endproc
 .proc BF_dec
     ldy #0
@@ -292,50 +174,14 @@ BF_jumptable:
     sta (BF_ptr),y
     rts
 .endproc
-.proc BF_dec2
-    jsr BF_dec
-    jmp BF_dec
-.endproc
-.proc BF_dec5
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jmp BF_dec
-.endproc
-.proc BF_dec10
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jmp BF_dec
-.endproc
-.proc BF_dec20
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jsr BF_dec
-    jmp BF_dec
+.proc BF_dec_multi
+    jsr BF_next
+    sta BF_tmp
+    @loop:
+        jsr BF_dec
+        dec BF_tmp
+        bne @loop
+    rts
 .endproc
 .proc BF_print
     jsr ppu_WaitForNmiDone
@@ -374,64 +220,17 @@ BF_jumptable:
     rts
 .endproc
 .proc BF_read
-    jsr controls_ReadPad1
-    jsr ppu_WaitForNmiDone
-    ldx #0
-    lda #PAD_A
-    bit controls_pad1_pressed
-    beq :+
-        ldx 'l'
-        jmp @end
+    ; return if callback is empty
+    lda BF_readCallback+0
+    bne :+
+    lda BF_readCallback+1
+    bne :+
+        rts
     :
-    lda #PAD_B
-    bit controls_pad1_pressed
-    beq :+
-        ldx 'i'
-        jmp @end
-    :
-    lda #PAD_SELECT
-    bit controls_pad1_pressed
-    beq :+
-        ldx 'd'
-        jmp @end
-    :
-    lda #PAD_START
-    bit controls_pad1_pressed
-    beq :+
-        ldx 'u'
-        jmp @end
-    :
-    lda #PAD_UP
-    bit controls_pad1_pressed
-    beq :+
-        ldx 'u'
-        jmp @end
-    :
-    lda #PAD_DOWN
-    bit controls_pad1_pressed
-    beq :+
-        ldx 'd'
-        jmp @end
-    :
-    lda #PAD_LEFT
-    bit controls_pad1_pressed
-    beq :+
-        ldx 'l'
-        jmp @end
-    :
-    lda #PAD_RIGHT
-    bit controls_pad1_pressed
-    beq :+
-        ldx 'r'
-        jmp @end
-    :
-@end:
-    cpx #0
-    beq :+
-        ldy #0
-        txa
-        sta (BF_ptr),y
-    :
+    jsr BF_execReadCallback
+    jsr BF_print
     rts
 .endproc
-
+.proc BF_execReadCallback
+    jmp (BF_readCallback)
+.endproc
