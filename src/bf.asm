@@ -67,6 +67,7 @@ BF_jumptable:
         bne @clearLoop
     m_ppu_BeginWrite
     call ppu_FillNameTable, #>PPU_ADDR_NAMETABLE1, #$20, #0
+    call ppu_FillNameTable, #>PPU_ADDR_NAMETABLE3, #$20, #0
     call ppu_SetAddr, #>PPU_ADDR_NAMETABLE1, #1, BF_line
     jsr ppu_On
 @loop:
@@ -222,7 +223,7 @@ BF_jumptable:
         :
         lda BF_line
         cmp BF_endLine
-        bne @noLineClear
+        jne @noLineClear
             inc BF_endLine
             lda BF_endLine
             cmp #60
@@ -231,14 +232,12 @@ BF_jumptable:
                 sta BF_endLine
             :
 
-            jsr ppu_Off
             lda BF_line
             cmp #30
             bge :+
                 call ppu_SetAddr, #>PPU_ADDR_NAMETABLE1, #1, BF_line
                 jmp :++
             :
-
                 lda BF_line
                 sub #30
                 sta BF_tmp
@@ -248,27 +247,25 @@ BF_jumptable:
             add #8
             cmp #240
             bne :+++
+                jsr ppu_Off
                 lda BF_line
                 cmp #30
                 bge :+
                     lda #~$03
                     and ppu_ctrl
                     sta ppu_ctrl
+                    call ppu_FillNameTable, #>PPU_ADDR_NAMETABLE3, #$20, #0
                     jmp :++
                 :
                     lda #$02
                     ora ppu_ctrl
                     sta ppu_ctrl
+                    call ppu_FillNameTable, #>PPU_ADDR_NAMETABLE1, #$20, #0
                 :
+                jsr ppu_On
+                lda #0
             :
             sta ppu_scrolly
-
-            lda #' '
-            ldx #32
-            :
-                m_ppu_Write
-                dex
-                bne :-
             jsr ppu_ResetScroll
             ; call ppu_SetAddr, #>PPU_ADDR_NAMETABLE1, #1, BF_line
             ; call ppu_FillNameTable, #>PPU_ADDR_NAMETABLE1, #$20, #0
