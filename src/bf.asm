@@ -136,14 +136,11 @@ BF_jumptable:
 .endproc
 .proc BF_incp_multi
     jsr BF_next
-    sta BF_tmp
-    @loop:
-        inc BF_ptr+0
-        bne :+
-            inc BF_ptr+1
-        :
-        dec BF_tmp
-        bne @loop
+    add BF_ptr+0
+    sta BF_ptr+0
+    lda BF_ptr+1
+    adc #0
+    sta BF_ptr+1
     rts
 .endproc
 .proc BF_decp
@@ -156,13 +153,12 @@ BF_jumptable:
 .proc BF_decp_multi
     jsr BF_next
     sta BF_tmp
-    @loop:
-        dec BF_ptr+0
-        bne :+
-            dec BF_ptr+1
-        :
-        dec BF_tmp
-        bne @loop
+    lda BF_ptr+0
+    sub BF_tmp
+    sta BF_ptr+0
+    lda BF_ptr+1
+    sbc #0
+    sta BF_ptr+1
     rts
 .endproc
 .proc BF_inc
@@ -175,15 +171,10 @@ BF_jumptable:
 .endproc
 .proc BF_inc_multi
     jsr BF_next
-    sta BF_tmp
     ldy #0
-    @loop:
-        lda (BF_ptr),y
-        clc
-        adc #1
-        sta (BF_ptr),y
-        dec BF_tmp
-        bne @loop
+    add {(BF_ptr),y}
+    sta (BF_ptr),y
+    sta BF_tmp
     rts
 .endproc
 .proc BF_dec
@@ -198,13 +189,9 @@ BF_jumptable:
     jsr BF_next
     sta BF_tmp
     ldy #0
-    @loop:
-        lda (BF_ptr),y
-        sec
-        sbc #1
-        sta (BF_ptr),y
-        dec BF_tmp
-        bne @loop
+    lda (BF_ptr),y
+    sub BF_tmp
+    sta (BF_ptr),y
     rts
 .endproc
 .proc BF_print
