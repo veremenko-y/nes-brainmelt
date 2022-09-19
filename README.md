@@ -1,4 +1,4 @@
-# NES Brainfuck
+# NES Brainf*ck
 
 ![Brainfuck](/info/title.png)
 
